@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width" />
+<title>Index3</title>
+<link rel="stylesheet" href="/HwmaoTravleshop/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/HwmaoTravleshop/css/zui.css" />
+<link rel="stylesheet" href="/HwmaoTravleshop/css/datetimepicker.css" />
+<script type="text/javascript" src="/HwmaoTravleshop/js/jquery.min.js"></script>
+<script type="text/javascript"
+	src="/HwmaoTravleshop/js/datetimepicker.js"></script>
+<script type="text/javascript" src="/HwmaoTravleshop/js/zui.js"></script>
+<script type="text/javascript">
+    var domain = window.location.host;
+	$(function(){ 
+	$("#show").append("<img src='http://"+ domain +"/#(bossmsg.photoUrl??)' style=width:150px;height:150px;>");	
+	});
+	$(function(){ 
+		$("#cancle").click(function(){ 
+			var pictureSrc=document.getElementById("pictureSrc").value;
+			if(pictureSrc==""){
+				history.go(-1);
+			}else{
+			      $.ajax({  
+			             type: "POST",      
+			              url: "/HwmaoTravleshop/bossmsg/cancle",      
+			               data: "pictureSrc="+pictureSrc,   
+			              success: function(data){  
+			            	history.go(-1);
+			             }            
+			     });  
+			}
+		}); 
+	});
+
+	var checkall=function (){
+	 	var pic=$("#pictureSrc").val(); 
+		var introduce=$("#introduce").val(); 
+		if(introduce == "" && introduce==""){
+		    alert("内容和图片不可都为空");
+		    return false;
+		} 
+	}
+
+    </script>
+</head>
+<body>
+	<!--  -->
+	<form class="form-horizontal" method="post"
+		action="/HwmaoTravleshop/bossmsg/savebossmsgPic"
+		onsubmit="return checkall()">
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">用户昵称</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="hidden" name="bossmsg.id" value="#(bossmsg.id??)" /> <input
+					type="hidden" name="picUrl" value="#(bossmsg.photoUrl??)" /> <input
+					type="text" class="form-control" id="introduce"
+					name="Scenicboardname" value="#(bossmsg.Scenicboardname??)"
+					readonly="readonly">
+
+			</div>
+		</div>
+
+		<!--   图片显示 -->
+		<div class="form-group" style="height: 180px;">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">用户头像</label>
+			<!-- 存储图片地址，并显示图片 -->
+
+			<div id="show" style="width: 150px; height: 150px; margin-left: 280px;"></div>
+		</div>
+
+		<!--   图片上传控件 -->
+		<div class="form-group" style="height: 100px; margin-top: 80px;">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">上传图片</label> <input type="file" name="image"
+				id="imageFile">
+			<button id="upload" onclick="return false;">上传</button>
+			<!-- 存储图片地址，并显示图片 -->
+			<input type="hidden" name="photoUrl" id="pictureSrc">
+			<div id="showb"
+				style="width: 150px; height: 150px; margin-left: 400px; margin-top: -80px;"></div>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">留图的介绍</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="introduce"
+					name="bossmsg.introduce" value="#(bossmsg.deintroduce??)">
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<button class="btn btn-default">提交</button>
+				<button class="btn btn-default" id="cancle" type="button">返回</button>
+			</div>
+		</div>
+	</form>
+	<!-- 图片上传js文件,放到最后加载 -->
+	<script type="text/javascript"
+		src="/HwmaoTravleshop/js/ajaxfileupload.js"></script>
+	<script type="text/javascript"
+		src="/HwmaoTravleshop/js/uploadbossmsg.js"></script>
+</body>
+</html>

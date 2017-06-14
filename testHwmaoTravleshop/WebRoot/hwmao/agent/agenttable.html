@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" src="js/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="js/contabs.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<link href="css/bootstrap.min.css" rel="stylesheet" />
+<script src="js/bootstrap-table.js"></script>
+<link rel="stylesheet" href="css/zui.css">
+<script src="js/zui.js"></script>
+<link href="css/bootstrap-table.css" rel="stylesheet" />
+<script src="js/bootstrap-table-zh-CN.js"></script>
+<script src="js/bootstrap-table-editable.js"></script>
+<script src="js/jquery.form.js"></script>
+<script type="text/javascript">
+
+
+//这个页面的查询还没有做好
+
+
+
+$(function () {
+
+    //1.初始化Table
+    var oTable = new TableInit();
+    oTable.Init();
+
+    //2.初始化Button的点击事件
+    var oButtonInit = new ButtonInit();
+    oButtonInit.Init();
+
+});
+var findpic=function(){
+	window.location.href="/agent/reset/"+id;  
+	
+};
+var append=function(){
+	window.location.href="/HwmaoTravleagent/hwmao/agent/agentadd.html"; 
+	
+};
+/*  var searchformData={}; //定义一个全局变量收集表单数据。
+$("#searchBtn").on("click", function() {
+	 alert(1);
+     searchformData = form2js($("#searchForm")[0]);//将收集到的表单数据使用form2js转换为json格式。
+     console.log(searchformData);
+      $("#table").bootstrapTable("refresh", { //BootstrapTable定义的方法，refresh。
+           query: searchformData
+     }); 
+}); 
+ */
+
+
+
+var edit=function(){
+	
+	 var info=$('#tb_departments').bootstrapTable('getSelections');
+	
+	 var length=info.length;
+	 
+	
+	  if(length ==1 ){
+		  var id=info[0].agentId;
+		  window.location.href="/agent/edit/"+id;  
+	 }else if (length ==0) {
+		 alert("请选择数据");
+	}else{
+		 alert("请选择一条数据");
+	 }  
+
+}
+var del=function(){
+	 var info=$('#tb_departments').bootstrapTable('getSelections');
+	 var arr=new Array();
+	 var length=info.length;
+	 var agentId="";
+	 if(length ==0 ){
+		 alert("请选择数据");
+	 } else{
+		 for(var i=0;i<info.length;i++)
+		 {
+			 agentId=info[i].agentId;
+				$.ajax({
+			  		type: 'POST',
+				  	data: {"id":agentId},
+				  	url: '/agent/del',
+				  	dataType: 'json',	  
+				  	timeout: 1000,
+				  /* 	success: function(data){
+				  		
+				  		
+				  	} */
+				});
+		     }
+	 }  
+	 
+	 
+
+ 	
+
+	 location.reload();
+
+}
+
+var TableInit = function () {
+    var oTableInit = new Object();
+    //初始化Table
+    oTableInit.Init = function () {
+        $('#tb_departments').bootstrapTable({
+            url: '/HwmaoTravleagent/agent/GetDepartment',         //请求后台的URL（*）
+            method: 'get',                      //请求方式（*）
+            toolbar: '#toolbar',                //工具按钮用哪个容器
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,                   //是否显示分页（*）
+            sortName:'agentId',
+            sortable: true,                     //是否启用排序
+            sortOrder: 'desc',                   //排序方式
+            queryParams: oTableInit.queryParams,//传递参数（*）
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber:1,                       //初始化加载第一页，默认第一页
+            queryParamsType: "limit",
+            pageSize: 20,                       //每页的记录行数（*）
+/*        		search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大 */
+            /* strictSearch: true, */
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,                  //是否显示刷新按钮
+            minimumCountColumns: 2,             //最少允许的列数
+            clickToSelect: true,                //是否启用点击选中行
+           	uniqueId: "agentId",                //每一行的唯一标识，一般为主键列
+            showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+            cardView: false,                    //是否显示详细视图
+            detailView: false,                   //是否显示父子表
+            
+            columns: [{
+                checkbox: true
+            }, {
+                field: 'agentId',
+                title: '用户id',
+                sortable: true
+            },{
+                field: 'agentname',
+                title: '名称'
+            }, {
+                field: 'time',
+                title: '起始时间'
+            },{
+                field: 'ltime',
+                title: '最近登陆时间'
+            },{
+                field: 'province',
+                title: '区域(省)',
+               
+            },{
+                field: 'city',
+                title: '区域(市)',
+               
+            },{
+                field: 'county',
+                title: '区域(县)',
+              
+            },{
+                field: 'state',
+                title: '状态',
+                formatter:function(value,row,index){
+                	return value ==1 ? "正常" :"禁用";
+                }
+        
+            },{
+                title: '已经开发商户',
+                field: 'id',
+                align: 'center',
+                formatter:function(value,row,index){  
+                var e = '<a href="#" mce_href="#"  onclick="findscenic(\''+ row.id + '\')">'+ row.scenicaccount + '</a> ';
+            	return e;  
+              } 
+            },{
+                title: '已经开发应用',
+                field: 'id',
+                align: 'center',
+                formatter:function(value,row,index){  
+                var e = '<a href="#" mce_href="#"  onclick="findscenicboard(\''+ row.id + '\')">'+ row.scenicboardaccount + '</a> ';
+            	return e;  
+              } 
+            },{
+                title: '留图数',
+                field: 'id',
+                align: 'center',
+                formatter:function(value,row,index){  
+                var e = '<a href="#" mce_href="#"  onclick="findpic(\''+ row.id + '\')">'+ row.picaccount + '</a> ';
+            	return e;  
+              } 
+            },{
+                title: '留言数',
+                field: 'id',
+                align: 'center',
+                formatter:function(value,row,index){  
+                var e = '<a href="#" mce_href="#"  onclick="findcomment(\''+ row.id + '\')">'+ row.commontaccount + '</a> ';
+            	return e;  
+              } 
+            },{
+                title: '操作',
+                field: 'id',
+                align: 'center',
+                formatter:function(value,row,index){  
+            	var e = '<a href="#" mce_href="#"  onclick="edit(\''+ row.id + '\')">编辑</a> ';
+            	var f = '<a href="#" mce_href="#" data-toggle="modal" data-target="#myModal" onclick="forbidden(\''+ row.id + '\')">禁止</a> ';
+            	return e+f;  
+              } 
+            },],
+
+        });
+    };
+    //得到查询的参数
+    oTableInit.queryParams = function (params) {
+    	console.log(params);
+        var temp = {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小 每页显示的记录数 pageSize
+            offset: params.offset+1,  //页码  pageNumber
+            sort:params.sort,
+           	order:params.order,
+            statu: $("#txt_search_statu").val()
+            
+        };
+        return temp;
+    };
+    return oTableInit;
+};
+
+
+var ButtonInit = function () {
+    var oInit = new Object();
+    var postdata = {};
+
+    oInit.Init = function () {
+    	
+        //初始化页面上面的按钮事件
+    };
+
+    return oInit;
+};
+
+
+</script>
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="modal fade" id="myModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">×</span><span class="sr-only">关闭</span>
+					</button>
+					<h4 class="modal-title">警告</h4>
+				</div>
+				<div class="modal-body">
+					<p>禁用会导致这个用户无法登陆后台你确定吗？</p>
+				</div>
+				<div class="modal-footer">
+					<input id="time" name="" type="hidden" value="">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" onclick="confirm()"
+						data-dismiss="modal">保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="panel-body" style="padding-bottom: 0px;">
+		<!--        <div class="panel panel-default">
+        <div class="panel-heading">查询条件</div>
+            <div class="panel-body">
+                <form id="formSearch" class="form-horizontal"  id="searchForm" >
+                    <div class="form-group" style="margin-top:15px">
+                        <label class="control-label col-sm-1" for="txt_search_departmentname">代理商名称</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="txt_search_departmentname">
+                        </div>
+                        <label class="control-label col-sm-1" for="txt_search_departmentname">省</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="txt_search_departmentname">
+                        </div>
+                        <label class="control-label col-sm-1" for="txt_search_departmentname">县</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="txt_search_departmentname">
+                        </div>
+                        <label class="control-label col-sm-1" for="txt_search_statu">套餐选择</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="txt_search_statu">
+                        </div>
+                        <div class="col-sm-4" style="text-align:left;">
+                            <button type="button" style="margin-left:50px" id="searchBtn" class="btn btn-primary">查询</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>        -->
+
+		<!--         <div id="toolbar" class="btn-group">
+            <button id="btn_add" type="button" class="btn btn-default" onclick="append()">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true" ></span>新增
+            </button>
+            <button id="btn_delete" type="button" class="btn btn-default" onclick="del()">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true" ></span>删除
+            </button>
+        </div> -->
+		<table id="tb_departments"></table>
+	</div>
+</body>
+</html>

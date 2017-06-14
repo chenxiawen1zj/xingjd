@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>首页</title>
+<script type="text/javascript" src="/HwmaoTravleshop/js/jquery.min.js"></script>
+
+<link rel="stylesheet" href="/HwmaoTravleshop/css/zui.css" />
+<script type="text/javascript">
+/* $(function(){
+	$.ajax({
+  		type: 'POST',
+	  	url: '/HwmaoTravleagent/index/getaccount',
+	  	timeout: 1000,
+	  	success: function(data){	
+	  		initpoechart(data);
+	  	},
+	});	
+});
+function initpoechart(data){
+	switch(data[0].types)
+		{
+		case 0:
+		$("#agenttypes").html("金牌代理商");
+		  break;
+		case 2:
+		$("#agenttypes").html("银牌代理商");
+		  break;
+		default:
+			$("#agenttypes").html("铜牌代理商");
+	}
+ 	$("#accountnumber").html(data[0].accountnumber);
+ 	$("#accountnumberremain").html(data[0].accountnumberremain);
+ 	$("#accountnumberopened").html(data[0].accountnumber-data[0].accountnumberremain);
+ 	var piedata = [{
+ 	    value: data[0].accountnumber,
+ 	    color: "blue", // 使用颜色名称
+ 	    label: "总数"
+ 	}, {
+ 	    value: data[0].accountnumber-data[0].accountnumberremain,
+ 	    color:"#F7464A", // 自定义颜色
+ 	    // highlight: "#FF5A5E", // 自定义高亮颜色
+ 	    label: "已使用"
+ 	}, {
+ 	    value: data[0].accountnumberremain,
+ 	    color: 'green',
+ 	    label: "剩余"
+ 	}];
+	// 图表配置项，可以留空来使用默认的配置
+	var options = {
+	    scaleShowLabels: true, // 展示标签
+	};
+	// 创建饼图
+	var myPieChart = $("#myChart").pieChart(piedata, options);	
+} */
+</script>
+</head>
+<body>
+<div class="container-fluid">
+	<section class="row with-padding">
+
+		<div class="col-md-4 col-sm-6">
+			<div class="panel" data-id="1">
+			  <div class="panel-heading">
+			    <i class="icon icon-list"></i>
+			    <span class="title">最新通知</span>
+			  </div>
+			  <div class="panel-body">
+				<section class="items">
+					<div class="item">
+					    <div class="item-heading">
+					      <div class="pull-right label label-success">注意</div>
+					      <h4><a href="javascript:;">#(info.messge??)</a></h4>
+					    </div>
+					</div>
+				</section>
+			  </div>
+			</div>
+		</div>
+	</section>
+</div>
+</body>
+</html>

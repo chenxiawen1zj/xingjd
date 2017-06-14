@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width" />
+<title>Index3</title>
+<link rel="stylesheet" href="/HwmaoTravleshop/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/HwmaoTravleshop/css/zui.css" />
+<link rel="stylesheet" href="/HwmaoTravleshop/css/datetimepicker.css" />
+<script type="text/javascript" src="/HwmaoTravleshop/js/jquery.min.js"></script>
+<script type="text/javascript"
+	src="/HwmaoTravleshop/js/datetimepicker.js"></script>
+<script type="text/javascript" src="/HwmaoTravleshop/js/zui.js"></script>
+<script type="text/javascript">
+    var domain = window.location.host;
+	$(function(){ 
+	$("#show").append("<img src='http://"+ domain +"/#(fakeuser.avatarUrl??)'>");	
+	});
+	$(function(){ 
+		$("#cancle").click(function(){ 
+			var pictureSrc=document.getElementById("pictureSrc").value;
+			if(pictureSrc==""){
+				history.go(-1);
+			}else{
+			      $.ajax({  
+			             type: "POST",      
+			              url: "/HwmaoTravleshop/photo/cancle",      
+			               data: "pictureSrc="+pictureSrc,   
+			              success: function(data){  
+			            	console.log(data);
+			            	history.go(-1);
+			             }            
+			     });  
+			}
+		}); 
+	});
+
+	var checkall=function (){
+		var pic=$("#pictureSrc").val(); 
+	 	var introduce=$("#introduce").val(); 
+		if(pic == "" && introduce == ""){
+		    alert("图片和内容必须有一项填写");
+		    return false;
+		} 
+	}
+
+    </script>
+</head>
+<body>
+	<!--  -->
+	<form class="form-horizontal" method="post"  action="/HwmaoTravleshop/photo/save" onsubmit="return checkall()">
+		<div class="form-group">
+			<input type="hidden" name="photo.fakeid" value="#(fakeuser.id??)" />
+			<input type="hidden" name="photo.types" value="1" />
+			<input type="hidden" name="photo.avatarUrl"
+				value="#(fakeuser.avatarUrl??)" /> <label for="exampleInputAccount9"
+				class="col-sm-2 required">代理商名称</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="exampleInputAccount9"
+					name="agent.agentname" readonly="readonly" value="#(agent)">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">商家名字</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="hidden" name="photo.scenicId"
+					value="#(scenic.scenicId??)" /> <input type="text"
+					class="form-control" id="exampleInputPassword4" placeholder=""
+					value="#(scenic.name??)" readonly="readonly">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword1" class="col-sm-2 required">应用名称</label>
+			<div class="col-md-2 col-sm-10">
+				<select class="form-control" id="exampleInputAddress1"
+					name="photo.sceninBoardId"> #for(x : scenicboard)
+					<option value="#(x.sceninBoardId)">#(x.tittle)</option> #end
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">用户昵称</label>随机选择用户
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="exampleInputPassword4"
+					placeholder="" name="photo.nickname" value="#(fakeuser.nickname??)">
+			</div>
+		</div>
+		<!--   图片显示 -->
+		<div class="form-group" style="height: 180px;">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">用户头像</label>
+			<!-- 存储图片地址，并显示图片 -->
+
+			<div id="show"
+				style="width: 150px; height: 150px; margin-left: 280px;"></div>
+		</div>
+		<!--   图片上传控件 -->
+		<div class="form-group" style="height: 100px;">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">上传图片</label> <input type="file" name="image"
+				id="imageFile">
+			<button id="upload" onclick="return false;">上传</button>
+			<!-- 存储图片地址，并显示图片 -->
+			<input type="hidden" name="photo.photoUrl" id="pictureSrc">
+			<div id="showb"
+				style="width: 150px; height: 150px; margin-left: 400px; margin-top: -80px;"></div>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">内容</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="introduce"
+					name="photo.introduce">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword1" class="col-sm-2 required">模板选择</label>
+			<div class="col-md-2 col-sm-10">
+				<select class="form-control" id="exampleInputAddress1"
+					name="photo.templateId"> #for(x : template)
+					<option value="#(x.templateId)">#(x.style)</option> #end
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<button class="btn btn-default">提交</button>
+				<button class="btn btn-default" id="cancle" type="button">返回</button>
+			</div>
+		</div>
+	</form>
+	<!-- 图片上传js文件,放到最后加载 -->
+	<script type="text/javascript"
+		src="/HwmaoTravleshop/js/ajaxfileupload.js"></script>
+	<script type="text/javascript" src="/HwmaoTravleshop/js/uploadfake.js"></script>
+</body>
+</html>

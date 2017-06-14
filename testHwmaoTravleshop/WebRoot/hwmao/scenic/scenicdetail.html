@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width" />
+<title>Index3</title>
+<link rel="stylesheet" href="/HwmaoTravleshop/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/HwmaoTravleshop/css/zui.css" />
+<link rel="stylesheet" href="/HwmaoTravleshop/css/datetimepicker.css" />
+<script type="text/javascript" src="/HwmaoTravleshop/js/jquery.min.js"></script>
+<script type="text/javascript"
+	src="/HwmaoTravleshop/js/datetimepicker.js"></script>
+<script type="text/javascript" src="/HwmaoTravleshop/js/zui.js"></script>
+
+<script type="text/javascript">
+    var domain = window.location.host;
+	$(function(){ 
+	$("#show").append("<img src='http://"+ domain +"/#(scenic.picUrl??)' style=width:300px;height:300px;>");	
+	});
+$(function () {
+   $(".form-date").datetimepicker(
+    {
+        language:  "zh-CN",
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        format: "yyyy-mm-dd"
+    });
+  
+});
+$(function(){ 
+	$("#cancle").click(function(){ 
+		var pictureSrc=document.getElementById("pictureSrc").value;
+		if(pictureSrc==""){
+			history.go(-1);
+		}else{
+		      $.ajax({  
+		             type: "POST",      
+		              url: "/HwmaoTravleagent/scenic/cancle",      
+		               data: "pictureSrc="+pictureSrc,   
+		              success: function(data){  
+		            	  history.go(-1);
+		      			}            
+		             });  
+		}
+	}); 
+});
+
+var checkall=function (){
+
+ 	
+ 	ObjInput=document.getElementsByTagName( "input") ;
+ 	var flag = false;  
+ 	for(i=0;i <ObjInput.length;i++){  
+ 	  if(ObjInput[i].type== "text"){  
+ 	     if(ObjInput[i].value==''){
+ 	       flag = true;
+ 	       break ;
+ 	     }
+ 	  }  
+ 	}
+ 	if(flag){
+ 	  alert("请检查值不能为空！") ;
+ 	  return false;
+ 	}else{
+ 	  return true;	
+ 	}
+ 	
+}
+	
+
+
+
+
+var removeContent=function(){
+	$('#showcheck').empty();
+
+};
+var validatorloginName=function (){  
+ 	 var loginName=document.getElementById("exampleInputPassword10").value;  
+      if(loginName == "")  
+      {  
+    	$('#showcheck').append("用户名不能为空!");
+        return;  
+      }  
+      $.ajax({  
+             type: "POST",      
+              url: "/HwmaoTravleagent/scenic/checkloginName",      
+               data: "loginName="+loginName,   
+              success: function(data){  
+            console.log(data);
+              if(data==true){ 
+               $('#showcheck').append("抱歉！用户名已存在！");
+          	  }else{   
+          	  $('#showcheck').append("恭喜您！用户名没有被使用！");
+             }   
+             }            
+             });     
+     }          
+    </script>
+</head>
+<body>
+	<form class="form-horizontal" method="post"
+		action="/HwmaoTravleshop/scenic/updateScenicinfo"
+		onsubmit="return checkall()">
+		<div class="form-group">
+			<input type="hidden" name="agent.agentId" /> <label
+				for="exampleInputAccount9" class="col-sm-2 required">所属代理商</label>默认生成,不可编辑
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="exampleInputAccount9"
+					value="#(scenic.agentName??)" readOnly="true"> <input
+					type="hidden" name="scenic.scenicId" value="#(scenic.scenicId??)" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">起始时间</label>按合同签订时间为准
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control form-date readonly"
+					id="scenic.time" placeholder="起始时间" name="scenic.time"
+					value="#(scenic.time??)" readOnly="true">
+			</div>
+		</div>
+		<!--     <div class="form-group">
+    <label for="exampleInputPassword4" class="col-sm-2 required" class="required" >商家图片</label>
+    <div class="col-md-6 col-sm-10">
+      	<div id="show" style="width: 150px; height:  150px; margin-left: 280px; "></div>
+    </div>
+  </div> -->
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">商家名称</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="scenic.name"
+					name="scenic.name" value="#(scenic.name??)" readOnly="true">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">应用数</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="exampleInputPassword4"
+					placeholder="" name="scenic.scenicboardaccount"
+					value="#(scenic.scenicboardaccount??)" readOnly="true">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputAddress1" class="col-sm-2">商家地址</label>
+			<div class="col-sm-1">
+				<input type="text" class="form-control" id="scenic.province"
+					placeholder="省" name="scenic.province" value="#(scenic.province??)"
+					readOnly="true">
+			</div>
+			<div class="col-sm-1">
+				<input type="text" class="form-control" id="scenic.city"
+					placeholder="市" name="scenic.city" value="#(scenic.city??)"
+					readOnly="true">
+			</div>
+			<div class="col-sm-1">
+				<input type="text" class="form-control" id="scenic.county"
+					placeholder="县/区" name="scenic.county" value="#(scenic.county??)"
+					readOnly="true">
+			</div>
+			<div class="col-sm-4">
+				<input type="text" class="form-control" id="scenic.detailaddress"
+					placeholder="详细地址" name="scenic.detailaddress"
+					value="#(scenic.detailaddress??)" readOnly="true">
+			</div>
+
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">用户名</label>代理商后台登陆账号
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control loginname"
+					id="exampleInputPassword10" placeholder="" name="scenic.loginname"
+					value="#(scenic.loginname??)" readOnly="true">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">密码</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="scenic.password"
+					placeholder="" name="scenic.password" value="#(scenic.password??)">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">联系人</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="scenic.contactname"
+					placeholder="" name="scenic.contactname"
+					value="#(scenic.contactname??)">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">联系人电话</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="scenic.telphone1"
+					placeholder="" name="scenic.telphone1"
+					value="#(scenic.telphone1??)">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required">开户行名称</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="scenic.bankname"
+					placeholder="中国建设银行" name="scenic.bankname"
+					value="#(scenic.bankname??)">
+			</div>
+		</div>
+
+
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required">账号</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="scenic.bankaccount"
+					placeholder="" name="scenic.bankaccount"
+					value="#(scenic.bankaccount??)">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required">开户行地址</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="scenic.bankaddress"
+					placeholder="丽水市莲城支行" name="scenic.bankaddress"
+					value="#(scenic.bankaddress??)">
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<button type="submit" class="btn btn-default">提交</button>
+				<button type="button" class="btn btn-default"
+					onclick="history.go(-1);">返回</button>
+
+			</div>
+		</div>
+	</form>
+
+
+</body>
+</html>

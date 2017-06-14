@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" src="js/jquery.min.js?v=2.1.4"></script>
+<script src="js/bootstrap.min.js"></script>
+<link href="css/bootstrap.min.css" rel="stylesheet" />
+<script src="js/bootstrap-table.js"></script>
+<link href="css/bootstrap-table.css" rel="stylesheet" />
+<script src="js/bootstrap-table-zh-CN.js"></script>
+<script src="js/bootstrap-table-editable.js"></script>
+<script type="text/javascript">
+var domain = window.location.host;
+$(function () {
+	
+    //	1.初始化Table
+    var oTable = new TableInit();
+    oTable.Init();
+
+    //2.初始化Button的点击事件
+    var oButtonInit = new ButtonInit();
+    oButtonInit.Init();
+
+});
+//找到景点下的详细图片
+var findpic=function(id){
+	window.location.href="/HwmaoTravleshop/scenicboard/setScenicBoardId?id="+id; 
+	
+};
+var append=function(){
+	$.ajax({
+  		type: 'POST',
+	  	url: '/HwmaoTravleshop/scenicboard/checkscenicboardremain',
+	  	timeout: 1000,
+	  	success: function(data){
+	  		if(data==1){
+	  			window.location.href="/HwmaoTravleshop/scenicboard/add/";  
+	  		}else{
+	  			alert("您的应用数已经用完，请联系总部或者代理商");
+	  		}
+	  	}
+	});
+};
+var edit=function (id){
+	window.location.href="/HwmaoTravleshop/scenicboard/edit/"+id; 
+}
+//恢复
+var recover=function(id){
+	 
+	  window.location.href="/HwmaoTravleshop/scenicboard/recover/"+id;   
+}
+//禁用
+function forbidden(id){
+	
+	document.getElementById("time").value=id;	
+}
+var confirm=function(id){
+	 var id =document.getElementById("time").value;
+		$.ajax({
+	  		type: 'POST',
+		  	data: {"id":id},
+		  	url: '/HwmaoTravleshop/scenicboard/forbidden',
+		  	timeout: 1000,
+		  	success: function(data){
+		  		$('#tb_departments').bootstrapTable(('refresh'));
+		  	
+		  	}
+		});
+}
+//生成基本二维码
+function addspecialcodewxaqrcode(id){
+	
+	document.getElementById("time2").value=id;	
+}
+var confirm2=function(id){
+	 var id =document.getElementById("time2").value;
+		$.ajax({
+	  		type: 'POST',
+		  	data: {"id":id},
+		  	url: '/HwmaoTravleshop/scenicboard/addspecialcodewxaqrcode',
+		  	timeout: 1000,
+		  	success: function(data){
+		  		
+		  		$('#tb_departments').bootstrapTable(('refresh'));
+		  	
+		  	}
+		});
+}
+//生成普通二维码
+function addwxaqrcode(id){
+	
+	document.getElementById("time1").value=id;	
+}
+var confirm1=function(id){
+	 var id =document.getElementById("time1").value;
+		$.ajax({
+	  		type: 'POST',
+		  	data: {"id":id},
+		  	url: '/HwmaoTravleshop/scenicboard/addwxaqrcode',
+		  	timeout: 1000,
+		  	success: function(data){
+		  		$('#tb_departments').bootstrapTable(('refresh'));
+		  	
+		  	}
+		});
+}
+$(function() {
+
+		$('#tb_departments').bootstrapTable('resetSearch', '应用名称搜索');
+});
+
+var TableInit = function () {
+    var oTableInit = new Object();
+    //初始化Table
+    
+    oTableInit.Init = function () {
+    	
+        $('#tb_departments').bootstrapTable({
+            url: '/HwmaoTravleshop/scenicboard/GetDepartment',         //请求后台的URL（*）
+            method: 'get',                      //请求方式（*）
+            toolbar: '#toolbar',                //工具按钮用哪个容器
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,                   //是否显示分页（*）
+            sortName:'sceninBoardId',
+            sortable: true,                     //是否启用排序
+            sortOrder: 'desc',                   //排序方式
+            queryParams: oTableInit.queryParams,//传递参数（*）
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber:1,                       //初始化加载第一页，默认第一页
+            queryParamsType: "limit",
+            pageSize: 20,                       //每页的记录行数（*）
+       /*      pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*） */
+            search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+           /*  strictSearch: true, */
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,                  //是否显示刷新按钮
+            minimumCountColumns: 2,             //最少允许的列数
+            clickToSelect: true,                //是否启用点击选中行
+			uniqueId: "sceninBoardId",          //每一行的唯一标识，一般为主键列
+            showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+            cardView: false,                    //是否显示详细视图
+            detailView: false,
+             columns: [{
+                field: 'sceninBoardId',
+                title: 'ID',
+               
+            }, {
+                field: 'tittle',
+                title: '应用名称'
+            }, {
+                field: 'types',
+                title: '状态',
+                formatter:function(value,row,index){
+                	return value ==0 ? "旅游版" :"休闲版";
+                }
+        
+            },{
+                field: 'belongagent',
+                title: '所属代理商',
+                
+            },{
+                field: 'picurl',
+                title: '基本二维码',
+                align: 'center',
+                formatter: function(value,row,index){
+                	if(row.types==1){
+                		
+                		return '<img  src="http://'+ domain + '/'+ value + '" class="img-responsive"  alt="100%x80" width="150" height="80" >';
+                	}
+                    
+                }
+            },{
+                field: 'photo',
+                title: '特殊二维码',
+                align: 'center',
+                formatter: function(value,row,index){
+                	if(row.types==1){
+                		
+                		return '<img  src="http://'+ domain + '/'+ value + '" class="img-responsive"  alt="100%x80" width="150" height="80" >';
+                	}
+                    
+                }
+            },{
+                field: 'latitude',
+                title: '纬度',
+                
+            },{
+                field: 'longitude',
+                title: '经度',
+                
+            },{
+                title: '留言数',
+                field: 'commontaccount',
+                align: 'center',
+             
+            },{
+                title: '留图数',
+                field: 'sceninBoardId',
+                align: 'center',
+                formatter:function(value,row,index){  
+                var e = '<a href="#" mce_href="#"  onclick="findpic(\''+ row.sceninBoardId + '\')">'+ row.picaccount + '</a> ';
+            	return e;  
+              } 
+            },{
+                field: 'state',
+                title: '状态',
+                formatter:function(value,row,index){
+                	return value ==0 ? "正常" :"禁用";
+                }
+        
+            },{
+                field: 'time',
+                align: 'center',
+                title: '添加时间'
+            },{
+                field: 'pv',
+                align: 'center',
+                title: '浏览量'
+            },{
+                title: '操作',
+                field: 'sceninBoardId',
+                align: 'center',
+                formatter:function(value,row,index){  
+                var e = '<a href="#" mce_href="#" data-toggle="modal" data-target="#myModal" onclick="forbidden(\''+ row.sceninBoardId + '\')">禁用</a> ';
+            	var f = '<a href="#" mce_href="#"  onclick="recover(\''+ row.sceninBoardId + '\')">恢复</a> ';
+            	var g = '<a href="#" mce_href="#" onclick="edit(\''+ row.sceninBoardId + '\')">编辑</a> ';
+            	var h = '<a href="#" mce_href="#"  data-toggle="modal" data-target="#myModal1" onclick="addwxaqrcode(\''+ row.sceninBoardId + '\')">生成基本款二维码</a>';
+            	var i = '<a href="#" mce_href="#"  data-toggle="modal" data-target="#myModal2" onclick="addspecialcodewxaqrcode(\''+ row.sceninBoardId + '\')">生成特别款二维码</a> ';
+            	//未禁用
+            	if(row.state==0 && row.types==1 && row.picurl==null && row.photo!=null){
+                	return e+g+h;  
+                }
+            	if(row.state==0 && row.types==1 && row.picurl!=null && row.photo==null){
+                	return e+g+i;  
+                }
+				if(row.state==0 && row.types==1 && row.picurl!=null && row.photo!=null){
+                	return e+g;  
+                }
+				//已经禁用
+            	if(row.state==1 && row.types==1 && row.picurl==null && row.photo!=null){
+                	return f+g+h;  
+                }
+            	if(row.state==1 && row.types==1 && row.picurl!=null && row.photo==null){
+                	return f+g+i;  
+                }
+				if(row.state==1 && row.types==1 && row.picurl!=null && row.photo!=null){
+                	return f+g;  
+                }
+            	if(row.state==0 &&  row.types==0) {
+            		return e+g;
+            	}
+              } 
+            },]
+
+        });
+    };
+    //得到查询的参数
+    oTableInit.queryParams = function (params) {
+    	console.log(params.search==null);
+    	if(params.search=='应用名称搜索'){
+    		 var temp = {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+    		            limit: params.limit,   //页面大小 每页显示的记录数 pageSize
+    		            offset: params.offset+1,  //页码  pageNumber
+    		            sort:params.sort,
+    					order:params.order,
+    		            
+    		            
+    		        };	
+    	}else{
+    		   var temp = {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+    		            limit: params.limit,   //页面大小 每页显示的记录数 pageSize
+    		            offset: params.offset+1,  //页码  pageNumber
+    		            sort:params.sort,
+    					search:  encodeURIComponent(params.search), 
+    		            order:params.order,
+    		            
+    		            
+    		        };
+    	}
+    	return temp;
+    };
+    return oTableInit;
+};
+
+
+var ButtonInit = function () {
+    var oInit = new Object();
+    var postdata = {};
+
+    oInit.Init = function () {
+    	
+        //初始化页面上面的按钮事件
+    };
+
+    return oInit;
+};
+</script>
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="panel-body" style="padding-bottom: 0px;">
+		<div class="modal fade" id="myModal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<input id="time" name="" type="hidden" value="">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">×</span><span class="sr-only">关闭</span>
+						</button>
+						<h4 class="modal-title">警告</h4>
+					</div>
+					<div class="modal-body">
+						<p>禁用会导致这个应用无法进入你确定吗？</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-primary" onclick="confirm()"
+							data-dismiss="modal">确定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="myModal1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<input id="time1" name="" type="hidden" value="">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">×</span><span class="sr-only">关闭</span>
+						</button>
+						<h4 class="modal-title">警告</h4>
+					</div>
+					<div class="modal-body">
+						<p>确定要生成一张新的基本款的二维码吗？</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-primary" onclick="confirm1()"
+							data-dismiss="modal">确定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="myModal2">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<input id="time2" name="" type="hidden" value="">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">×</span><span class="sr-only">关闭</span>
+						</button>
+						<h4 class="modal-title">警告</h4>
+					</div>
+					<div class="modal-body">
+						<p>确定要生成一张新的特殊的二维码吗？</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-primary" onclick="confirm2()"
+							data-dismiss="modal">确定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="toolbar" class="btn-group">
+			<button id="btn_add" type="button" class="btn btn-default"
+				onclick="append()">
+				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+			</button>
+		</div>
+		<table id="tb_departments"></table>
+	</div>
+</body>
+</html>

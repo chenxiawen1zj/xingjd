@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" src="/HwmaoTravleshop/js/jquery.min.js"></script>
+<script src="/HwmaoTravleshop/js/bootstrap.min.js"></script>
+
+<link href="/HwmaoTravleshop/css/bootstrap.min.css" rel="stylesheet" />
+<script src="/HwmaoTravleshop/js/bootstrap-table.js"></script>
+<link href="/HwmaoTravleshop/css/bootstrap-table.css" rel="stylesheet" />
+
+<script src="/HwmaoTravleshop/js/bootstrap-table-zh-CN.js"></script>
+<script src="/HwmaoTravleshop/js/bootstrap-table-editable.js"></script>
+<script src="/HwmaoTravleshop/js/zui.js"></script>
+<link href="/HwmaoTravleshop/css/zui.css" rel="stylesheet" />
+<script type="text/javascript">
+var domain = window.location.host;
+
+$(function () {
+
+    //1.初始化Table
+    var oTable = new TableInit();
+    oTable.Init();
+
+    //2.初始化Button的点击事件
+    var oButtonInit = new ButtonInit();
+    oButtonInit.Init();
+
+});
+var certificate=function(){
+	window.location.href="/hwmao/agent/agentadd.html"; 
+	
+};
+
+ var certificate=function(id){
+	
+	window.location.href="/HwmaoTravleshop/money/certificate/"+id;   
+} 
+var edit=function (id){
+	
+	alert(domain);
+}
+/* var msg = $.zui.messager.show('消息内容', {placement: 'bottom'}); */
+//禁止
+function draw(id,money){
+		ss = id.split(",");
+		document.getElementById("time").value=ss[0];
+		document.getElementById("money").value=ss[1]/100;
+
+	}
+
+		
+	var confirm=function(id){
+		 var id =document.getElementById("time").value;
+		 var value =document.getElementById("cash").value;
+		 var money1 =document.getElementById("money").value;
+		 if(value>money){
+			 new $.zui.Messager('提示消息：提现金额超过您账户金额', {
+			        icon: 'bell',
+			        fade:  true,  // 禁用渐隐效果
+			        type: 'success'// 定义消息图标
+			    }).show(); 
+		 }else{
+				$.ajax({
+			  		type: 'POST',
+				  	data: {"id":id,"value":value},
+				  	url: '/HwmaoTravleshop/money/drawcash',
+				  	timeout: 1000,
+				  	success: function(data){
+	 			  		 if (data==1) {
+	 			  			new $.zui.Messager("提示消息：您的体现请求已经提交", {
+						        icon: 'bell',
+						        fade:  true,  // 禁用渐隐效果
+						        type: 'danger'// 定义消息图标
+						    }).show(); 
+	 			  			$('#tb_departments').bootstrapTable(('refresh'));
+						}else if (data==2) {
+							new $.zui.Messager("提示消息：体现金额不能为空", {
+						        icon: 'bell',
+						        fade:  true,  // 禁用渐隐效果
+						        type: 'danger'// 定义消息图标
+						    }).show();  
+							$('#tb_departments').bootstrapTable(('refresh'));
+						}
+				  	
+				  	}
+
+		 });
+	}
+	}
+var del=function(){
+	 var info=$('#tb_departments').bootstrapTable('getSelections');
+	 var arr=new Array();
+	 var length=info.length;
+	 var agentId="";
+	 if(length ==0 ){
+		 alert("请选择数据");
+	 } else{
+		 for(var i=0;i<info.length;i++)
+		 {
+			 agentId=info[i].agentId;
+				$.ajax({
+			  		type: 'POST',
+				  	data: {"id":agentId},
+				  	url: '/agent/del',
+				  	dataType: 'json',	  
+				  	timeout: 1000,
+				  /* 	success: function(data){
+				  		
+				  		
+				  	} */
+				});
+		     }
+	 }  
+	 location.reload();
+
+}
+
+var TableInit = function () {
+    var oTableInit = new Object();
+    //初始化Table
+    oTableInit.Init = function () {
+        $('#tb_departments').bootstrapTable({
+            url: '/HwmaoTravleshop/money/GetDraw',         //请求后台的URL（*）
+            method: 'get',                      //请求方式（*）
+            toolbar: '#toolbar',                //工具按钮用哪个容器
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,                   //是否显示分页（*）
+            sortName:'scenicId',
+            sortable: true,                     //是否启用排序
+            sortOrder: 'desc',                   //排序方式
+            queryParams: oTableInit.queryParams,//传递参数（*）
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber:1,                       //初始化加载第一页，默认第一页
+            queryParamsType: "limit",
+            pageSize: 20,                       //每页的记录行数（*）
+			showColumns: true,                  //是否显示所有的列
+            showRefresh: true,                  //是否显示刷新按钮
+            minimumCountColumns: 2,             //最少允许的列数
+            clickToSelect: true,                //是否启用点击选中行
+ 
+            uniqueId: "agentId",                //每一行的唯一标识，一般为主键列
+            showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+            cardView: false,                    //是否显示详细视图
+            detailView: false,                   //是否显示父子表
+            
+            columns: [
+             {
+                field: 'scenicId',
+                title: 'ID',
+                sortable: true
+            },{
+                field: 'agentname',
+                title: '代理商名称'
+            },{
+                field: 'bankname',
+                title: '开户行'
+            },{
+                field: 'bankaccount',
+                title: '开户行账号',
+                
+            },{
+                field: 'bankaddress',
+                title: '开户行地址',
+                
+            },{
+                field: 'money',
+                title: '您获得的金额（元）',
+                formatter:function(value,row,index){
+                	return value/100;
+                }
+                
+            },{
+                field: 'certificate',
+                title: '状态',
+                formatter:function(value,row,index){
+                	return value ==0 ? "未认证" :"已认证";
+                }
+        	 
+            },{
+                title: '操作',
+                field: 'id',
+                align: 'center',
+                formatter:function(value,row,index){  
+            	var e = '<a href="#" mce_href="#"  data-toggle="modal" data-target="#myModal" onclick="draw(\''+ row.scenicId + ','+ row.money + '\')">提现</a> ';
+            	var f = '<a href="#" mce_href="#"  onclick="certificate(\''+ row.scenicId + '\')">认证</a> ';
+            	var g = '银行卡认证中,请等待';
+            	var h=  '提现体现中，请等待';
+            	if(row.certificate==0){
+            		return f;  
+            	}
+            	if(row.certificate==2){
+            		return g;  
+            	}
+            	if(row.certificate==1&&row.drawmoney==0){
+            		return e;  
+            	}
+            	if(row.certificate==1&&row.drawmoney==1){
+            		return h;  
+            	}
+              } 
+            },]
+
+        });
+    };
+    //得到查询的参数
+    oTableInit.queryParams = function (params) {
+    	
+        var temp = {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小 每页显示的记录数 pageSize
+            offset: params.offset+1,  //页码  pageNumber
+            sort:params.sort,
+            search:params.search,
+            order:params.order,
+        };
+        return temp;
+    };
+    return oTableInit;
+};
+
+
+var ButtonInit = function () {
+    var oInit = new Object();
+    var postdata = {};
+
+    oInit.Init = function () {
+    	
+        //初始化页面上面的按钮事件
+    };
+
+    return oInit;
+};
+
+
+</script>
+<title>Insert title here</title>
+</head>
+<body>
+<div class="panel-body" style="padding-bottom:0px;">
+       	<div class="modal fade" id="myModal">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		            <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+				        <h4 class="modal-title">提示</h4>
+				      </div>
+				      <div class="modal-body">
+				        
+				        <input type="text" class="form-control" placeholder="用户名" id="cash">
+				        <!--  onkeyup="value=value.replace(/[^\d]/g,'') "   
+						onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" -->
+				      </div>
+				      <div class="modal-footer">
+				       	<input id="time" name="" type="hidden" value="">
+				       	<input id="money" name="" type="hidden" value="">
+				        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				        <button type="button" class="btn btn-primary" onclick="confirm()" data-dismiss="modal">确定</button>
+				   	</div>
+		    </div>
+		  </div>
+		</div>
+		
+		
+		#if(certificate==0)
+        <div id="toolbar" class="btn-group">
+           
+			<span class="glyphicon " aria-hidden="true" ></span>为确保资金准确到账,请完成银行卡认证。
+        </div>
+        #end
+        <table id="tb_departments"></table>
+   	 </div>
+</body>
+</html>

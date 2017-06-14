@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width" />
+<title>Index3</title>
+<link rel="stylesheet" href="/HwmaoTravleshop/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/HwmaoTravleshop/css/zui.css" />
+<script type="text/javascript" src="/HwmaoTravleshop/js/jquery.min.js"></script>
+<script type="text/javascript" src="/HwmaoTravleshop/js/zui.js"></script>
+<script type="text/javascript">
+    
+    </script>
+</head>
+<body>
+	<form class="form-horizontal" method="post"
+		action="/HwmaoTravleshop/scenicboard/update">
+		<div class="form-group">
+			<input type="hidden" name="scenicboard.sceninBoardId"
+				value="#(scenicboard.sceninBoardId??)" /> <label
+				for="exampleInputAccount9" class="col-sm-2 required">应用名称</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="exampleInputAccount9"
+					placeholder="应用名称" name="scenicboard.tittle"
+					value="#(scenicboard.tittle??)">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required">纬度</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="exampleInputPassword4"
+					placeholder="纬度" name="scenicboard.latitude"
+					value="#(scenicboard.latitude??)">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required">经度</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="exampleInputPassword4"
+					placeholder="经度" name="scenicboard.longitude"
+					value="#(scenicboard.longitude??)">
+			</div>
+		</div>
+
+
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<button type="submit" class="btn btn-default">提交</button>
+				<button class="btn btn-default" onclick="history.go(-1);">取消</button>
+			</div>
+		</div>
+	</form>
+</body>
+</html>

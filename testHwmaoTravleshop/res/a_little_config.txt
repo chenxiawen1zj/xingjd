@@ -1,0 +1,4 @@
+jdbcUrl = jdbc:mysql://rdsq9a6jvyfz5s2g4ok5r.mysql.rds.aliyuncs.com:3306/smallapp?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+user = smallapp
+password = Az241963! 
+devMode = true

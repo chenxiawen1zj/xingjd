@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width" />
+<title>Index3</title>
+<link rel="stylesheet" href="/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/css/zui.css" />
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/zui.js"></script>
+<script type="text/javascript">
+    
+    </script>
+</head>
+<body>
+	<form class="form-horizontal" method="post"
+		action="/administrator/save">
+		<div class="form-group">
+			<input type="hidden" name="administrator.id"
+				value="#(administrator.id??)" /> <label for="exampleInputAccount9"
+				class="col-sm-2 required">代理商名称</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="exampleInputAccount9"
+					placeholder="用户名" name="administrator.name"
+					value="#(administrator.name??)">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">部门</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="exampleInputPassword4"
+					placeholder=" " name="administrator.department"
+					value="#(administrator.department??)">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">状态</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="exampleInputPassword4"
+					placeholder="" name="administrator.state"
+					value="#(administrator.state??)">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">邮箱</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="exampleInputPassword4"
+					placeholder="" name="administrator.emial"
+					value="#(administrator.emial??)">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">联系人电话</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="exampleInputPassword4"
+					placeholder="" name="administrator.tel"
+					value="#(administrator.tel??)">
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<button type="submit" class="btn btn-default">提交</button>
+				<button class="btn btn-default" onclick="history.go(-1);">返回</button>
+			</div>
+		</div>
+	</form>
+</body>
+</html>

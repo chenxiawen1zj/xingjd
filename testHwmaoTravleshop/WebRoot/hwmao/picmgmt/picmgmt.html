@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" src="/HwmaoTravleshop/js/jquery.min.js?v=2.1.4"></script>
+<script src="/HwmaoTravleshop/js/bootstrap.min.js"></script>
+
+
+<link href="/HwmaoTravleshop/css/bootstrap.min.css" rel="stylesheet" />
+<script src="/HwmaoTravleshop/js/bootstrap-table.js"></script>
+<link href="/HwmaoTravleshop/css/bootstrap-table.css" rel="stylesheet" />
+<link rel="stylesheet" href="/HwmaoTravleshop/css/zui.css">
+<!-- 添加时间 -->
+<link rel="stylesheet" href="/HwmaoTravleshop/css/datetimepicker.css" />
+<script type="text/javascript" src="/HwmaoTravleshop/js/datetimepicker.js"></script>
+<script src="/HwmaoTravleshop/js/bootstrap-table-zh-CN.js"></script>
+<script src="/HwmaoTravleshop/js/bootstrap-table-editable.js"></script>
+<script type="text/javascript">
+var domain = window.location.host;
+$(function () {
+
+    //1.初始化Table
+    var oTable = new TableInit();
+    oTable.Init();
+
+    //2.初始化Button的点击事件
+    var oButtonInit = new ButtonInit();
+    oButtonInit.Init();
+
+});
+// 时间选择器
+$(function () {
+	   $(".form-date").datetimepicker(
+	    {
+	        language:  "zh-CN",
+	        weekStart: 1,
+	        todayBtn:  1,
+	        autoclose: 1,
+	        todayHighlight: 1,
+	        startView: 2,
+	        minView: 2,
+	        forceParse: 0,
+	        format: "yyyy-mm-dd"
+	    });
+	  
+	});
+var append=function(){
+	window.location.href="/HwmaoTravleshop/photo/add"; 
+	
+};
+
+
+var appendtravel=function(){
+	window.location.href="/HwmaoTravleshop/photo/addtravel"; 
+	
+};
+//恢复
+var updatefake=function(id){
+	 
+	  window.location.href="/HwmaoTravleshop/photo/updatefake/"+id;   
+}
+//恢复
+var recover=function(id){
+	 
+	  window.location.href="/HwmaoTravleshop/photo/recover/"+id;   
+}
+//精选
+var selection=function(id){
+	 
+	  window.location.href="/HwmaoTravleshop/photo/selection/"+id;   
+}
+//全部
+var whole=function(id){
+	alert(1);
+	window.location.href="/HwmaoTravleshop/photo/whole/"+id;   
+}
+//禁用
+function forbidden(id){
+	
+	document.getElementById("time").value=id;	
+}
+var confirm=function(id){
+	 var id =document.getElementById("time").value;
+		$.ajax({
+	  		type: 'POST',
+		  	data: {"id":id},
+		  	url: '/HwmaoTravleshop/photo/forbidden',
+		  	timeout: 1000,
+		  	success: function(data){
+		  		location.reload();	
+		  	
+		  	}
+		});
+	 
+	 
+}
+function EncodeUtf8(s1)
+{
+      var s = escape(s1);
+      var sa = s.split("%");
+      var retV ="";
+      if(sa[0] != "")
+      {
+         retV = sa[0];
+      }
+      for(var i = 1; i < sa.length; i ++)
+      {
+           if(sa[i].substring(0,1) == "u")
+           {
+               retV += Hex2Utf8(Str2Hex(sa[i].substring(1,5)));
+              
+           }
+           else retV += "%" + sa[i];
+      }
+     
+      return retV;
+}
+$(function() {
+	$("#searchBtn").click(function() {
+		$('#tb_departments').bootstrapTable(('refresh'));	// 很重要的一步，刷新url！
+	  	$('#searchForm input[name=\'btime\']').val('');
+	  	$('#searchForm input[name=\'etime\']').val('');
+
+	  	
+
+		
+	});
+ 
+});
+var showboard=function (id){
+	alert(id);
+}
+ $(function() {
+
+	$('#tb_departments').bootstrapTable('resetSearch', '介绍搜索');
+}); 
+var del=function(){
+	 var info=$('#tb_departments').bootstrapTable('getSelections');
+	 var arr=new Array();
+	 var length=info.length;
+	 var agentId="";
+	 if(length ==0 ){
+		 alert("请选择数据");
+	 } else{
+		 for(var i=0;i<info.length;i++)
+		 {
+			 agentId=info[i].agentId;
+				$.ajax({
+			  		type: 'POST',
+				  	data: {"id":agentId},
+				  	url: '/agent/del',
+				  	dataType: 'json',	  
+				  	timeout: 1000,
+				  /* 	success: function(data){
+				  		
+				  		
+				  	} */
+				});
+		     }
+	 }  
+	 location.reload();
+
+}
+
+var TableInit = function () {
+    var oTableInit = new Object();
+    //初始化Table
+    oTableInit.Init = function () {
+        $('#tb_departments').bootstrapTable({
+            url: '/HwmaoTravleshop/photo/GetDepartment',         //请求后台的URL（*）
+            method: 'get',                      //请求方式（*）
+            toolbar: '#toolbar',                //工具按钮用哪个容器
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,                   //是否显示分页（*）
+            sortName:'photoId',
+            sortable: true,                     //是否启用排序
+            sortOrder: 'desc',                   //排序方式
+            queryParams: oTableInit.queryParams,//传递参数（*）
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber:1,                       //初始化加载第一页，默认第一页
+            queryParamsType: "limit",
+            pageSize: 20,                       //每页的记录行数（*）
+			search:true,
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,                  //是否显示刷新按钮
+            minimumCountColumns: 2,             //最少允许的列数
+            clickToSelect: true,                //是否启用点击选中行
+ 			uniqueId: "photoId",                //每一行的唯一标识，一般为主键列
+            showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+            cardView: false,                    //是否显示详细视图
+            detailView: false,                   //是否显示父子表
+            silent : true, 						// 必须设置刷新事件
+            columns: [{
+                checkbox: true
+            },{
+                field: 'photoId',
+                title: 'ID',
+              
+            },{
+                field: 'denickname',
+                title: '用户昵称'
+            },{
+                field: 'introduce',
+                title: '介绍',
+                
+            },{
+                field: 'photoUrl',
+                title: '图片',
+                align: 'center',
+                formatter: function(value,row,index){
+                	
+                    return '<img  src="http://'+ domain + '/'+ value + '" class="img-responsive"  alt="100%x80" width="150" height="80" >';
+                }
+            },{
+                field: 'commentaccount',
+                align: 'center',
+                title: '评论总数'
+            },{
+                field: 'supportaccount',
+                align: 'center',
+                title: '点赞总数'
+            },{
+                field: 'time',
+                align: 'center',
+                title: '添加时间'
+            },{
+                field: 'selection',
+                align: 'center',
+                title: '精选or全部',
+                formatter:function(value,row,index){
+                	return value ==1 ? "精选" :"全部";
+                }
+        	 
+            },{
+                field: 'types',
+                align: 'center',
+                title: '版本',
+                formatter:function(value,row,index){
+                	return value ==1 ? "休闲" :"旅游";
+                }
+        	 
+            },{
+                field: 'fakeid',
+                align: 'center',
+                title: '是否虚拟',
+                formatter:function(value,row,index){
+                    var e = '<a href="#" mce_href="#"  onclick="updatefake(\''+ row.photoId + '\')">修改</a> ';
+                	var f = "是";
+                	return value >0 ? e:"否";
+                }
+        	 
+            },{
+                field: 'sceninBoardname',
+                title: '应用名',
+                
+            },{
+                field: 'state',
+                title: '状态',
+                formatter:function(value,row,index){
+                	
+                	return value ==1 ? "禁用" :"正常";
+                }
+        	 
+            },{
+                title: '操作',
+                field: 'photoId',
+                align: 'center',
+                formatter:function(value,row,index){  
+              
+                var e = '<a href="#" mce_href="#" data-toggle="modal" data-target="#myModal" onclick="forbidden(\''+ row.photoId + '\')">禁用</a> ';
+            	var f = '<a href="#" mce_href="#"  onclick="recover(\''+ row.photoId + '\')">恢复</a> ';
+            	var g = '<a href="#" mce_href="#"  onclick="selection(\''+ row.photoId + '\')">精选</a> ';
+            	var h = '<a href="#" mce_href="#"  onclick="whole(\''+ row.photoId + '\')">全部</a> ';
+ 				if(row.state==1&&row.selection==1&&row.types==0){
+ 					return f+h;
+               	};
+ 				if(row.state==0&&row.selection==0&&row.types==0){
+ 					return e+g;
+               	};
+               	if(row.state==0&&row.selection==1&&row.types==0){
+ 					return e+h;
+               	};
+               	if(row.state==1&&row.selection==0&&row.types==0){
+ 					return f+g;
+               	};
+               	if(row.state==1&&row.types==1){
+ 					return f;
+               	};
+            	if(row.state==0&&row.types==1){
+ 					return e;
+               	};
+            	
+              } 
+            },]
+
+        });
+    };
+    //得到查询的参数
+    oTableInit.queryParams = function (params) {
+    	if(params.search=='介绍搜索'){
+   		 var temp = {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+   		            limit: params.limit,   //页面大小 每页显示的记录数 pageSize
+   		            offset: params.offset+1,  //页码  pageNumber
+   		            sort:params.sort,
+   		         	btime:   $('#searchForm input[name=\'btime\']').val(),
+   		            etime:   $('#searchForm input[name=\'etime\']').val(),
+   					order:params.order,
+   		            
+   		            
+   		        };	
+   	}else{
+   		   var temp = {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+   		            limit: params.limit,   //页面大小 每页显示的记录数 pageSize
+   		            offset: params.offset+1,  //页码  pageNumber
+   		            sort:params.sort,
+   					search:  encodeURIComponent(params.search), 
+   					btime:   $('#searchForm input[name=\'btime\']').val(),
+   					etime:   $('#searchForm input[name=\'etime\']').val(),
+   		            order:params.order,
+   		            
+   		            
+   		        };
+   	}
+        return temp;
+    };
+    return oTableInit;
+};
+
+
+var ButtonInit = function () {
+    var oInit = new Object();
+    var postdata = {};
+
+    oInit.Init = function () {
+    	
+        //初始化页面上面的按钮事件
+    };
+
+    return oInit;
+};
+$(function() {
+	$("#eventquery").click(function() {
+		$('#tb_departments').bootstrapTable(('refresh'));	// 很重要的一步，刷新url！
+		// console.log("/program/area/findbyItem?offset="+0+"&"+$("#areaform").serialize())
+		$('#eventqueryform input[name=\'introduce\']').val('')
+		
+	});
+ 
+});
+
+</script>
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="panel-body" style="padding-bottom: 0px;">
+	        <div class="panel panel-default">
+        <div class="panel-heading">查询条件</div>
+            <div class="panel-body">
+                <form method="post" class="form-horizontal"  id="searchForm" >
+                    <div class="form-group" style="margin-top:15px">
+                        <label class="control-label col-sm-1" for="txt_search_departmentname">起始时间</label>
+                        <div class="col-sm-2">
+                            <input type="text" name="btime" class="form-control form-date" >
+                        </div>
+                        
+                        <label class="control-label col-sm-3" for="txt_search_departmentname">结束时间</label>
+                        <div class="col-sm-2">
+                            <input type="text" name="etime" class="form-control form-date" >
+                        </div>
+               
+                        <div class="col-sm-1" style="text-align:left;">
+                            <button type="button" style="margin-left:50px" id="searchBtn" class="btn btn-primary">查询</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+		<div class="modal fade" id="myModal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<input id="time" name="" type="hidden" value="">
+						<button type="button" class="close" data-dismiss="modal">
+							<span aria-hidden="true">×</span><span class="sr-only">关闭</span>
+						</button>
+						<h4 class="modal-title">警告</h4>
+					</div>
+					<div class="modal-body">
+						<p>禁用会导致这张图片无法在小程序中显示</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-primary" onclick="confirm()"
+							data-dismiss="modal">保存</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="toolbar" class="btn-group">
+			<button id="btn_add" type="button" class="btn btn-default"
+				onclick="append()">
+				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增休闲版留图
+			</button>
+
+			<button id="btn_add" type="button" class="btn btn-default"
+				onclick="appendtravel()">
+				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增旅游版留图
+			</button>
+
+
+		</div>
+		<table id="tb_departments"></table>
+	</div>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width" />
+<title></title>
+<link rel="stylesheet" href="/HwmaoTravleshop/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/HwmaoTravleshop/css/zui.css" />
+<link rel="stylesheet" href="/HwmaoTravleshop/css/datetimepicker.css" />
+<script type="text/javascript" src="/HwmaoTravleshop/js/jquery.min.js"></script>
+<script type="text/javascript"
+	src="/HwmaoTravleshop/js/datetimepicker.js"></script>
+<script type="text/javascript" src="/HwmaoTravleshop/js/zui.js"></script>
+<script type="text/javascript">
+    var domain = window.location.host;
+	$(function(){ 
+		$("#showupload").append("<img  src='http://"+ domain +"/#(scenicpic.picUrl??)' style=width:300px;height:300px;>");
+	
+	});
+	 
+	$(function(){ 
+		$("#cancle").click(function(){ 
+			var pictureSrc=document.getElementById("pictureSrc").value;
+			if(pictureSrc==""){
+				history.go(-1);
+			}else{
+			      $.ajax({  
+			             type: "POST",      
+			             url: "/HwmaoTravleshop/scenic/cancle",      
+			             data: "pictureSrc="+pictureSrc, 
+			             dataType: "json",
+			             success: function(data){  
+			            	console.log(data);
+			            	history.go(-1);
+			             },            
+			     });  
+			}
+		}); 
+	});
+ 
+	
+	var checkall=function (){
+	 	var pic=$("#pictureSrc").val();
+	 	var introduce=$("#introduce").val(); 
+		if(pic == ""){
+		    alert("图片未上传");
+		    return false;
+		}else if(introduce == ""){
+			 alert("内容不可为空");
+			    return false;
+		}
+	
+	}
+
+    </script>
+</head>
+<body>
+
+	<form class="form-horizontal" method="post"
+		action="/HwmaoTravleshop/scenic/saveScenicPic"
+		onsubmit="return checkall()">
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">商户名称</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="hidden" name="scenicpic.scenicPicId"
+					value="#(scenicpic.scenicPicId??)" /> <input type="hidden"
+					name="picUrl" value="#(scenicpic.picUrl??)" /> <input type="text"
+					class="form-control" name="name" value="#(scenicpic.name??)"
+					readonly="readonly">
+			</div>
+		</div>
+
+		<!--图片显示 -->
+		<div class="form-group" style="height: 350px;">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">商户上传图片</label>
+			<!-- 存储图片地址，并显示图片 -->
+			<div id="showupload"
+				style="width: 300px; height: 300px; margin-left: 280px;"></div>
+		</div>
+
+
+		<!--   图片上传控件 -->
+		<div class="form-group" style="height: 100px; margin-top: 80px;">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">上传修改图片</label> <input type="file" name="image"
+				id="imageFile">
+			<button id="upload" onclick="return false;">上传</button>
+			<!-- 存储图片地址，并显示图片 -->
+			<input type="hidden" name="photoUrl" id="pictureSrc">
+			<div id="showb"  style="width: 150px; height: 150px; margin-left: 400px; margin-top: -80px;"></div>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">商家图片名称</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="introduce"
+					name="scenicpic.tittle" value="#(scenicpic.tittle??)"
+					readonly="readonly">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<button class="btn btn-default">提交</button>
+				<button class="btn btn-default" id="cancle" type="button">返回</button>
+			</div>
+		</div>
+	</form>
+	<!-- 图片上传js文件,放到最后加载 -->
+	<script type="text/javascript"
+		src="/HwmaoTravleshop/js/ajaxfileupload.js"></script>
+	<script type="text/javascript"
+		src="/HwmaoTravleshop/js/uploadupdatepic.js"></script>
+</body>
+</html>

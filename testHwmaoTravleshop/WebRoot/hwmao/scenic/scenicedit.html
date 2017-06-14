@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width" />
+
+<link rel="stylesheet" href="/HwmaoTravleshop/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/HwmaoTravleshop/css/zui.css" />
+<link rel="stylesheet" href="/HwmaoTravleshop/css/datetimepicker.css" />
+<script type="text/javascript" src="/HwmaoTravleshop/js/jquery.min.js"></script>
+<script type="text/javascript"
+	src="/HwmaoTravleshop/js/datetimepicker.js"></script>
+<script type="text/javascript" src="/HwmaoTravleshop/js/zui.js"></script>
+
+<script type="text/javascript">
+var domain = window.location.host;
+$(function () {
+	
+
+	$("#show").append("<img src='http://"+ domain +"/#(scenic.picUrl??)'>");
+	
+	$(".form-date").datetimepicker(
+    {
+        language:  "zh-CN",
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0,
+        format: "yyyy-mm-dd"
+    });
+  
+});
+$(function(){ 
+	$("#cancle").click(function(){ 
+		var pictureSrc=document.getElementById("pictureSrc").value;
+		if(pictureSrc==""){
+			history.go(-1);
+		}else{
+		      $.ajax({  
+		             type: "POST",      
+		              url: "/HwmaoTravleagent/scenic/cancle",      
+		               data: "pictureSrc="+pictureSrc,   
+		              success: function(data){  
+		            	console.log(data);
+		            	history.go(-1);
+		             }            
+		     });  
+		}
+	}); 
+});
+
+
+
+
+var removeContent=function(){
+	$('#showcheck').empty();
+
+	console.log("获得了焦点");
+	
+};
+/* var validatorloginName=function (){  
+ 	 var loginName=document.getElementById("exampleInputPassword10").value;  
+      if(loginName == "")  
+      {  
+    	$('#showcheck').append("用户名不能为空!");
+        return;  
+      }  
+      $.ajax({  
+             type: "POST",      
+              url: "/HwmaoTravleshop/scenic/checkloginName",      
+               data: "loginName="+loginName,   
+              success: function(data){  
+            console.log(data);
+              if(data==true){ 
+               $('#showcheck').append("抱歉！用户名已存在！");
+          	  }else{   
+          	  $('#showcheck').append("恭喜您！用户名没有被使用！");
+             }   
+             }            
+             });     
+     }  */         
+    </script>
+</head>
+<body>
+	<form class="form-horizontal" method="post"
+		action="/HwmaoTravleshop/scenic/update">
+
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">起始时间</label>按合同签订时间为准
+			<div class="col-md-6 col-sm-10">
+				<input type="hidden" name="scenic.picUrl" value="#(scenic.picUrl??)">
+				<input type="hidden" class="form-control" id="exampleInputPassword4"
+					name="scenic.scenicId" value="#(scenic.scenicId??)"> <input
+					type="text" class="form-control form-date readonly"
+					id="exampleInputPassword4" placeholder="起始时间" name="scenic.time"
+					value="#(scenic.time??)">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">商家名称</label>按合同签订时间为准
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="exampleInputPassword4"
+					name="scenic.name" value="#(scenic.name??)">
+			</div>
+		</div>
+		<!--   图片上传控件 -->
+		<div class="form-group" style="height: 100px;">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">上传商家图片</label> <input type="file" name="image"
+				id="imageFile">
+			<button id="upload" onclick="return false;">上传</button>
+			<!-- 存储图片地址，并显示图片 -->
+			<input type="hidden" name="pictureSrc" id="pictureSrc">
+			<div id="show"
+				style="width: 150px; height: 150px; margin-left: 450px; margin-top: -80px;">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">应用数</label>代理商后台登陆账号
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="exampleInputPassword4"
+					placeholder="" name="scenic.scenicboardaccount"
+					value="#(scenic.scenicboardaccount??)">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputAddress1" class="col-sm-2">商家地址</label>
+			<div class="col-sm-1">
+				<input type="text" class="form-control" id="exampleInputAddress2"
+					placeholder="省" name="scenic.province" value="#(scenic.province??)">
+			</div>
+			<div class="col-sm-1">
+				<input type="text" class="form-control" id="exampleInputAddress2"
+					placeholder="市" name="scenic.city" value="#(scenic.city??)">
+			</div>
+			<div class="col-sm-1">
+				<input type="text" class="form-control" id="exampleInputAddress2"
+					placeholder="县/区" name="scenic.county" value="#(scenic.county??)">
+			</div>
+			<div class="col-sm-4">
+				<input type="text" class="form-control" id="exampleInputAddress2"
+					placeholder="详细地址" name="scenic.detailaddress"
+					value="#(scenic.detailaddress??)">
+			</div>
+
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">用户名</label>代理商后台登陆账号
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control loginname"
+					id="exampleInputPassword10" placeholder="" name="scenic.loginname"
+					value="#(scenic.loginname??)" readonly="readonly">
+				<div id="showcheck"></div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">密码</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="exampleInputPassword4"
+					placeholder="" name="scenic.password" value="#(scenic.password??)">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">联系人</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="exampleInputPassword4"
+					placeholder="" name="scenic.contactname"
+					value="#(scenic.contactname??)">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required"
+				class="required">联系人电话</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="exampleInputPassword4"
+					placeholder="" name="scenic.telphone1"
+					value="#(scenic.telphone1??)">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required">开户行名称</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="exampleInputPassword4"
+					placeholder="中国建设银行" name="scenic.bankname"
+					value="#(scenic.bankname??)">
+			</div>
+		</div>
+
+
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required">账号</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="exampleInputPassword4"
+					placeholder="" name="scenic.bankaccount"
+					value="#(scenic.bankaccount??)">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="exampleInputPassword4" class="col-sm-2 required">开户行地址</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" id="exampleInputPassword4"
+					placeholder="丽水市莲城支行" name="scenic.bankaddress"
+					value="#(scenic.bankaddress??)">
+			</div>
+		</div>
+
+
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<button type="submit" class="btn btn-default">提交</button>
+				<button type="button" class="btn btn-default" id="cancle">返回</button>
+
+			</div>
+		</div>
+	</form>
+	<!-- 图片上传js文件,放到最后加载 -->
+	<script type="text/javascript"
+		src="/HwmaoTravleshop/js/ajaxfileupload.js"></script>
+	<script type="text/javascript" src="/HwmaoTravleshop/js/upload.js"></script>
+</body>
+</html>

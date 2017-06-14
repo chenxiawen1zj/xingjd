@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<link href="css/bootstrap.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="css/zui.css">
+<script src="js/zui.js"></script>
+<script src="js/bootstrap-table.js"></script>
+<link href="css/bootstrap-table.css" rel="stylesheet" />
+<script src="js/bootstrap-table-zh-CN.js"></script>
+<script src="js/bootstrap-table-editable.js"></script>
+<script type="text/javascript">
+$(function () {
+    //1.初始化Table
+    var oTable = new TableInit();
+    oTable.Init();
+
+    //2.初始化Button的点击事件
+    var oButtonInit = new ButtonInit();
+    oButtonInit.Init();
+
+});
+var reset=function(id){
+	window.location.href="/administrator/reset/"+id;  
+	
+};
+var edit=function(id){
+	  window.location.href="/administrator/edit/"+id;  
+};
+var del=function(id){
+	window.location.href="/hwmao/administrator/add.html"; 
+	
+};
+
+
+/**
+ * 判断目标是否是函数
+ * @param {mixed} val
+ * @returns {boolean}
+ */
+/* function isFunction( val ) {
+  return typeof val === 'function';
+}
+
+function confirm(id,Callback){
+	
+	isFunction(Callback) && Callback(id);
+}
+*/
+function forbidden(id){
+	document.getElementById("time").value=id;	
+}
+
+	
+var confirm=function(id){
+	 var id =document.getElementById("time").value;
+		$.ajax({
+	  		type: 'POST',
+		  	data: {"id":id},
+		  	url: 'administrator/forbidden',
+		  	timeout: 1000,
+		  	success: function(data){
+		  		location.reload();
+		  	
+		  	}
+		});
+	 
+	 
+}
+var append=function(){
+	
+	window.location.href="/hwmao/administrator/add.html"; 
+}
+
+var TableInit = function () {
+    var oTableInit = new Object();
+    //初始化Table
+    oTableInit.Init = function () {
+        $('#tb_departments').bootstrapTable({
+            url: '/administrator/GetDepartment',         //请求后台的URL（*）
+            method: 'get',                      //请求方式（*）
+            toolbar: '#toolbar',                //工具按钮用哪个容器
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,                   //是否显示分页（*）
+            sortName:'id',
+            sortable: true,                     //是否启用排序
+            sortOrder: 'desc',                   //排序方式
+            queryParams: oTableInit.queryParams,//传递参数（*）
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber:1,                       //初始化加载第一页，默认第一页
+       		pageSize: 10,                       //每页的记录行数（*）
+      		strictSearch: true,
+            showColumns: true,                  //是否显示所有的列
+            showRefresh: true,                  //是否显示刷新按钮
+            minimumCountColumns: 2,             //最少允许的列数
+            clickToSelect: true,                //是否启用点击选中行
+			uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+            showToggle:true,                    //是否显示详细视图和列表视图的切换按钮
+            cardView: false,                    //是否显示详细视图
+            detailView: false,                   //是否显示父子表
+            
+            columns: [{
+                field: 'id',
+                title: 'ID',
+                sortable: true
+            }, {
+                field: 'tel',
+                title: '电话'
+            },{
+                field: 'account',
+                title: '登录名',
+        
+            },{
+                field: 'emial',
+                title: '邮件'
+            },{
+                field: 'name',
+                title: '用户名'
+            },{
+                field: 'state',
+                title: '状态',
+                formatter:function(value,row,index){
+                	return value ==1 ? "禁用" :"正常";
+                }
+            },{
+                field: 'time',
+                title: '添加时间',
+
+                
+            },{
+                title: '操作',
+                field: 'id',
+                align: 'center',
+                formatter:function(value,row,index){  
+                
+            	var e = '<a href="#" mce_href="#" data-toggle="modal" data-target="#myModal" onclick="forbidden(\''+ row.id + '\')">禁用</a> ';
+            	var f = '<a href="#" mce_href="#" onclick="reset(\''+ row.id + '\')">重设密码</a> ';
+            	var g = '<a href="#" mce_href="#" onclick="edit(\''+ row.id + '\')">编辑</a> ';
+            	var h = '<a href="#" mce_href="#" onclick="del(\''+ row.id + '\')">删除</a> ';
+            	return e+f+g+h;  
+              } 
+            },],
+
+        }
+        );
+    };
+    //得到查询的参数
+    oTableInit.queryParams = function (params) {
+    	console.log(params);
+    	var temp = {    //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit, //页面大小 每页显示的记录数 pageSize
+            /* parseInt(params.offset); */
+            offset:params.offset,//页码  pageNumber
+            sort:params.sort,
+            search:params.search,
+            order:params.order,
+        };
+        return temp;
+    };
+    return oTableInit;
+};
+
+
+var ButtonInit = function () {
+    var oInit = new Object();
+    var postdata = {};
+	oInit.Init = function () {
+    	
+        //初始化页面上面的按钮事件
+    };
+
+    return oInit;
+};
+</script>
+
+</head>
+<body>
+	<div class="modal fade" id="myModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">×</span><span class="sr-only">关闭</span>
+					</button>
+					<h4 class="modal-title">警告</h4>
+				</div>
+				<div class="modal-body">
+					<p>禁用会导致这个用户无法登陆后台你确定吗？</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" onclick="confirm()"
+						data-dismiss="modal">保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="panel-body" style="padding-bottom: 0px;">
+		<div id="toolbar" class="btn-group">
+			<input id="time" name="" type="hidden" value="">
+			<button id="btn_add" type="button" class="btn btn-default"
+				onclick="append()">
+				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+			</button>
+
+		</div>
+		<table id="tb_departments"></table>
+	</div>
+</body>
+</html>

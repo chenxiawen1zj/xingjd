@@ -1,0 +1,263 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+
+	<head>
+		<meta charset="UTF-8">
+		<script src="//cdnjs.cloudflare.com/ajax/libs/zui/1.6.0/lib/jquery/jquery.js"></script>
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/zui/1.6.0/css/zui.min.css">
+		<!-- 配置文件 -->
+		<script type="text/javascript" src="/HwmaoTravleshop/ueditor/ueditor.config.js"></script>
+		<!-- 编辑器源码文件 -->
+		<script type="text/javascript" src="/HwmaoTravleshop/ueditor/ueditor.all.js"></script>
+		<script type="text/javascript" charset="utf-8" src="/HwmaoTravleshop/ueditor/lang/zh-cn/zh-cn.js"></script>
+		<script type="text/javascript" src="/HwmaoTravleshop/js/zui.js"></script>
+		<script type="text/javascript">
+			var checkall = function() {
+				hidden();
+				ObjInput = document.getElementsByTagName("input");
+				var flag = false;
+				for(i = 0; i < ObjInput.length; i++) {
+					if(ObjInput[i].type == "text") {
+						if(ObjInput[i].value == '') {
+							flag = true;
+							break;
+						}
+					}
+					if(ObjInput[i].type == "hidden") {
+						if(ObjInput[i].value == '') {
+							flag = true;
+							break;
+						}
+					}
+				}
+				if(flag) {
+
+					show();
+					return false;
+				} else {
+					return true;
+				}
+			}
+
+			function show() {
+				document.getElementById("msg").style.display = "";
+
+			}
+
+			function hidden() {
+				document.getElementById("msg").style.display = "none";
+
+			}
+			$(function(){ 
+				$("#cancle").click(function(){ 
+					var pictureSrc=document.getElementById("picurl").value;
+					if(pictureSrc==""){
+						history.go(-1);
+					}else{
+					      $.ajax({  
+					             type: "POST",      
+					              url: "/HwmaoTravleshop/guide/cancle",      
+					              data: "pictureSrc="+pictureSrc,   
+					              success: function(data){  
+					            	console.log(data);
+					            	history.go(-1);
+					             }            
+					     });  
+					}
+				}); 
+			});
+		</script>
+		<style>
+			ul {
+				display: inline-block;
+				width: 100%;
+				margin: 0;
+				padding: 0;
+			}
+			
+			li {
+				list-style-type: none;
+				margin: 5px;
+				padding: 0;
+				float: left;
+			}
+		</style>
+	</head>
+
+	<body class="gray-bg" style="height: 100%">
+		<div id="msg" class="alert alert-danger-inverse alert-dismissable" style="display: none">
+			<!-- <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button> -->
+			<p>请检查是否有未填写数据</p>
+		</div>
+		<form action="/HwmaoTravleshop/guide/save" method="post" style="margin-top: 20px;" onsubmit="return checkall()">
+			<hr class="divider" style="margin-top: 20px;">
+			<div class="ibox-title" style="margin-left: 10px;">
+					<h5>
+						添加旅游文章 <small>添加首页图片</small>
+					</h5>
+			</div>
+			<div class="form-group">
+				<label for="exampleInputPassword1" class="col-sm-1 required">应用名称</label>
+				<div class="col-md-2 col-sm-10">
+					<select class="form-control" id="exampleInputAddress1" name="sceninBoardId"> #for(x : scenicboard)
+						<option value="#(x.sceninBoardId)">#(x.tittle)</option> #end
+					</select>
+				</div>
+				
+			</div>
+			
+			<div class="col-sm-12" style="margin-top: 20px;">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>
+						添加旅游文章 <small>添加首页图片</small>
+					</h5>
+					</div>
+				</div>
+				<div>
+
+					<div id='uploaderExample3' class="uploader" data-ride="uploader" data-url="your/file/upload/url">
+						<div class="uploader-message text-center">
+							<div class="content"></div>
+
+						</div>
+						<div class="uploader-files file-list file-list-grid"></div>
+						<div>
+							<hr class="divider" style="margin-bottom: 5px;">
+							<div class="uploader-status pull-right text-muted"></div>
+							<button type="button" id="j_upload_img_btn" class="btn btn-link uploader-btn-browse">
+							<i class="icon icon-plus"></i>图片上传
+						</button> 仅上传一张图片，多张上传按第一张为准 <input type="hidden" name="picturl" id="picurl" value="" />
+						</div>
+					</div>
+
+					<ul id="upload_img_wrap"></ul>
+
+					<!-- <button type="button" id="j_upload_file_btn">附件上传</button> -->
+					<ul id="upload_file_wrap"></ul>
+
+					<!-- 加载编辑器的容器 -->
+					<textarea id="uploadEditor" style="display: none;"></textarea>
+
+				</div>
+				<hr class="divider" style="margin-top: 20px;">
+				<h5>
+				输入文章的标题 <small>最多只能输入14个字</small>
+			</h5>
+				<input type="text" class="form-control" placeholder="请输入标题" maxlength="14" name="tittle">
+				<hr class="divider" style="margin-top: 5px;">
+				<h5>
+				输入文章的正文 <small></small>
+			</h5>
+
+				<div class="ibox-content">
+
+					<!-- 加载编辑器的容器 -->
+					<script id="container" name="content" type="text/plain" style="width: 100%; height: 500px">
+						这里写你的初始化内容
+					</script>
+					<button class="btn btn-success " type="submit" onClick="test();">成功</button>
+					<button class="btn btn-default" id="cancle" type="button">返回</button>
+					
+				</div>
+
+			</div>
+		</form>
+
+	</body>
+	<!-- 使用ue -->
+	<script type="text/javascript">
+		$(function() {
+			// 实例化编辑器，这里注意配置项隐藏编辑器并禁用默认的基础功能。
+			var uploadEditor = UE.getEditor("uploadEditor", {
+				isShow: false,
+				focus: false,
+				enableAutoSave: false,
+				autoSyncData: false,
+				autoFloatEnabled: false,
+				wordCount: false,
+				sourceEditor: null,
+				scaleEnabled: true,
+				toolbars: [
+					["insertimage", "attachment"]
+				]
+			});
+
+			// 监听多图上传和上传附件组件的插入动作
+			uploadEditor.ready(function() {
+				uploadEditor.addListener("beforeInsertImage",
+					_beforeInsertImage);
+				uploadEditor.addListener("afterUpfile", _afterUpfile);
+			});
+
+			// 自定义按钮绑定触发多图上传和上传附件对话框事件
+			document.getElementById('j_upload_img_btn').onclick = function() {
+				var dialog = uploadEditor.getDialog("insertimage");
+				dialog.title = '多图上传';
+				dialog.render();
+				dialog.open();
+			};
+
+			// 多图上传动作
+			function _beforeInsertImage(t, result) {
+				for(var i in result) {
+					var imageHtml = '<li><img class="img-rounded" src="' + result[i].src + '"  height="150"></li>';
+					$("#picurl").val($("#picurl").val() + result[i].src + ",");
+					$('#upload_img_wrap').append(imageHtml);
+				}
+
+			}
+
+			$("#upload_img_wrap").on("click", "img", function(envt) {
+				var imgurl = $(this).attr("src");
+				var html = "<img class=\"img-thumbnail\" src=" + imgurl + ">";
+				showpicurl(html);
+			});
+
+			function showpicurl(content) {
+				(new $.zui.ModalTrigger({
+					custom: content,
+					showHeader: false,
+					size: 'lg'
+				})).show();
+			}
+
+			// 附件上传
+			function _afterUpfile(t, result) {
+				var fileHtml = '';
+				for(var i in result) {
+					fileHtml += '<li><a href="' + result[i].url + '" target="_blank">' +
+						result[i].url + '</a></li>';
+				}
+				document.getElementById('upload_file_wrap').innerHTML = fileHtml;
+			}
+		});
+	</script>
+	<!-- 实例化编辑器 -->
+	<script type="text/javascript">
+		/* var ue = UE.getEditor('container'); */
+		var _editor = UE.getEditor('container');
+		_editor.ready(function() {
+			//隐藏编辑器，因为不会用到这个编辑器实例，所以要隐藏
+			/*  _editor.hide(); */
+			//侦听图片上传
+			_editor.addListener('beforeinsertimage', function(t, arg) {
+				//将地址赋值给相应的input,只去第一张图片的路径
+				var imgs;
+				for(var a in arg) {
+					imgs += arg[a].src + ',';
+				}
+				$("#picture").attr("value", arg[0].src);
+				//图片预览
+				$("#preview").attr("src", arg[0].src);
+			})
+
+		});
+		//弹出图片上传的对话框
+		function upImage() {
+			var myImage = _editor.getDialog("insertimage");
+			myImage.open();
+		}
+	</script>
+
+</html>

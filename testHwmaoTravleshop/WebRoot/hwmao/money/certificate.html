@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+   	<link rel="stylesheet" href="/HwmaoTravleshop/css/zui.css" />
+
+    <link href="/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="/HwmaoTravleshop/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="/css/animate.min.css" rel="stylesheet">
+    <link href="/css/style.min.css?v=4.1.0" rel="stylesheet">
+   
+ 	<script type="text/javascript" src="/js/jquery.min.js" ></script>
+
+	<script type="text/javascript" src="/HwmaoTravleshop/js/zui.js" ></script>
+    <script type="text/javascript">
+   	var checkall=function (){
+		ObjInput=document.getElementsByTagName("input") ;
+		var flag = false;  
+     	for(i=0;i <ObjInput.length;i++){  
+     	  if(ObjInput[i].type== "text"){  
+     	     if(ObjInput[i].value==''){
+     	       flag = true;
+     	       break ;
+     	     }
+     	  }  
+     	}
+     	if(flag){
+     	  alert("请检查值不能为空！") ;
+     	  return false;
+     	}else{
+     	  return true;	
+     	}
+    }  
+
+  
+    </script>
+</head>
+<body class="gray-bg">
+			<div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>银行卡认证 <small>确定银行信息，向指定账户汇入所给数额的钱款，成功后会退回。之前填写有错误的请更正，此次认证之后，我们就按照此账号给您汇款。</small></h5>
+  					</div>
+                    </div>
+                    <div class="ibox-content">
+						<form class="form-horizontal" method="post"  action="/HwmaoTravleshop/money/bankcheck" onsubmit="return checkall()">
+						 <div class="form-group">
+						 	<input type="hidden" name="scenic.scenicId" value="#(scenic.scenicId??)" />
+						   <label for="exampleInputAccount9" class="col-sm-2 required control-label">收款账号</label>
+						   <div class="col-md-6 col-sm-10">
+						     <input type="text" class="form-control" id="exampleInputAccount9" placeholder="收款账号"  value="33001616686053002414"  onfocus=this.blur()>
+						   </div>
+						 </div>
+						
+
+						<div class="hr-line-dashed"></div>
+						     <div class="form-group">
+						   <label for="exampleInputPassword4" class="col-sm-2 required" class="required">收款银行</label>
+						   <div class="col-md-6 col-sm-10">
+						     <input type="text" class="form-control" id="exampleInputPassword4" placeholder=""  value="中国建设银行杭州江城支行" onfocus=this.blur()>
+						   </div>
+						 </div>
+						 <div class="hr-line-dashed"></div>
+						     <div class="form-group">
+						   <label for="exampleInputPassword4" class="col-sm-2 required" class="required">汇款金额</label>
+						   <div class="col-md-6 col-sm-10">
+						     <input type="text" class="form-control" id="exampleInputPassword10" placeholder="" name="express.address" value="1元" onfocus=this.blur()>
+						   </div>
+						 </div>
+	
+						  <div class="hr-line-dashed"></div>
+						     <div class="form-group">
+						   <label for="exampleInputPassword4" class="col-sm-2 required" class="required">您的银行账号</label>
+						   <div class="col-md-6 col-sm-10">
+						     <input type="text" class="form-control" id="exampleInputPassword4" placeholder="" name="scenic.bankaccount" value="#(scenic.bankaccount??)">
+						     
+						   </div>
+						 </div>
+						  <div class="hr-line-dashed"></div>
+						       <div class="form-group">
+						   <label for="exampleInputPassword4" class="col-sm-2 required" class="required">您的银行名字</label>
+						   <div class="col-md-6 col-sm-10">
+						     <input type="text" class="form-control" id="exampleInputPassword4" placeholder="中国建设银行" name="scenic.bankname" value="#(scenic.bankname??)">
+						   </div>
+						 </div>
+						  <div class="hr-line-dashed"></div>
+						       <div class="form-group">
+						   <label for="exampleInputPassword4" class="col-sm-2 required" class="required">您的银行地址</label>
+						   <div class="col-md-6 col-sm-10">
+						     <input type="text" class="form-control" id="exampleInputPassword4" placeholder="杭州江城支行" name="scenic.bankaddress" value="#(scenic.bankaddress??)">
+						   </div>
+						 </div>
+						<div class="hr-line-dashed"></div>
+						<div class="form-group">
+						   <div class="col-sm-offset-2 col-sm-10">
+						     <button type="submit" class="btn btn-primary" >确认已汇款之后提交</button>
+						     <button  class="btn btn-white" onclick="history.go(-1);" type="button">返回</button>
+						    </div>
+						  </div>
+						</form>
+					</div>
+ 				</div>
+	
+		</body>
+	</html>
